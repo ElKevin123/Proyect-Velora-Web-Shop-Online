@@ -1,6 +1,5 @@
 "use client";
 
-// 🔥 IMPORTANTE: Agregamos "use" aquí arriba para solucionar el error de Next.js 15
 import { useEffect, useState, use } from "react"; 
 
 const ArtisanPhoto = () => (
@@ -10,7 +9,6 @@ const ArtisanPhoto = () => (
 );
 
 export default function ProductPage({ params }) {
-  // 1. 🔥 SOLUCIÓN AL ERROR ROJO: Desempaquetamos los params usando "use()"
   const resolvedParams = use(params);
   const productId = resolvedParams.id;
 
@@ -22,7 +20,6 @@ export default function ProductPage({ params }) {
   const [rating, setRating] = useState(5);
 
   useEffect(() => {
-    // 2. 🔥 SOLUCIÓN A TUS PRODUCTOS REALES: Leemos los que creaste
     
     const userString = localStorage.getItem("velora_currentUser");
     if (userString) setCurrentUser(JSON.parse(userString));
@@ -33,17 +30,14 @@ export default function ProductPage({ params }) {
 
     const savedProducts = JSON.parse(localStorage.getItem("products")) || [];
 
-    // Buscamos tu producto. A veces el ID es el número de posición (0, 1, 2...)
     let foundProduct = savedProducts.find(p => String(p.id) === String(productId));
     
-    // Si no lo encuentra por ID, probamos con su número de posición en la lista
     if (!foundProduct && !isNaN(productId)) {
       foundProduct = savedProducts[Number(productId)];
     }
 
     if (foundProduct) {
-      // Preparamos el producto para mostrarlo. 
-      // Si te faltó ponerle descripción al crearlo, le ponemos una genérica de Velora.
+      
       const finalProduct = {
         id: foundProduct.id || productId,
         name: foundProduct.name,
@@ -78,39 +72,34 @@ export default function ProductPage({ params }) {
     cart.unshift(cartItem);
     localStorage.setItem("cart", JSON.stringify(cart));
     
-    // Disparamos evento para el puntito verde del carrito
     window.dispatchEvent(new Event("cartUpdated"));
     window.location.href = "/Cart"; 
   }
 
-  // 🔥 3. FUNCIÓN PARA ENVIAR EL COMENTARIO
   function handleAddComment() {
-    if (!newComment.trim()) return; // Evita comentarios vacíos
+    if (!newComment.trim()) return; 
 
     if (!currentUser) {
       alert("Debes iniciar sesión para dejar un comentario.");
-      window.location.href = "/login"; // Los mandamos a loguearse
+      window.location.href = "/login"; 
       return;
     }
 
     const commentData = {
       id: Date.now(),
-      // 🔥 CORRECCIÓN AQUÍ: Usamos productId en vez de PRODUCT_ID_AQUI
       productId: productId, 
-      user: currentUser.email.split('@')[0], // Usamos la primera parte del correo como "Nombre"
+      user: currentUser.email.split('@')[0], 
       text: newComment,
       rating: rating,
       date: new Date().toLocaleDateString("es-PE", { year: 'numeric', month: 'short', day: 'numeric' })
     };
 
-    // Guardamos en el localStorage global
     const allComments = JSON.parse(localStorage.getItem("product_comments")) || [];
     const updatedComments = [...allComments, commentData];
     localStorage.setItem("product_comments", JSON.stringify(updatedComments));
 
-    // Actualizamos la pantalla al instante
     setComments([...comments, commentData]);
-    setNewComment(""); // Limpiamos la caja de texto
+    setNewComment(""); 
     setRating(5);
   }
 
@@ -120,7 +109,6 @@ export default function ProductPage({ params }) {
   return (
     <div className="p-6 max-w-7xl mx-auto mt-10 grid grid-cols-1 md:grid-cols-2 gap-12 items-start font-serif bg-gray-50">
       
-      {/* 🖼️ Imagen Real del Producto */}
       <div className="bg-white p-4 border border-gray-100 rounded-lg shadow-sm">
         <img 
           src={product.image} 
@@ -129,7 +117,6 @@ export default function ProductPage({ params }) {
         />
       </div>
 
-      {/* 📝 Información Real */}
       <div className="flex flex-col text-gray-800">
         
         <div className="flex justify-between items-center mb-6 border-b border-gray-100 pb-4">
@@ -141,7 +128,7 @@ export default function ProductPage({ params }) {
           </span>
         </div>
 
-        {/* Nombre y Precio Reales */}
+
         <h1 className="text-4xl font-bold mb-3 tracking-wide">{product.name}</h1>
         <p className="text-2xl text-[#006699] font-bold mb-8">S/. {product.price.toFixed(2)}</p>
 
@@ -150,7 +137,7 @@ export default function ProductPage({ params }) {
           <div>
             <span className="text-xs text-gray-400 uppercase tracking-wide">Crafted by</span>
             <p className="font-medium text-gray-800 text-sm capitalize">{product.craftsman}</p>
-            {/* 🔥 Mostramos el correo solo si existe, en letra pequeñita */}
+            
             {product.craftsmanEmail && (
               <p className="text-xs text-gray-400 lowercase mt-0.5">{product.craftsmanEmail}</p>
             )}
@@ -179,14 +166,11 @@ export default function ProductPage({ params }) {
           Añadir a la bolsa
         </button>
 
-      {/* 🔥 SECCIÓN DE COMENTARIOS ACTUALIZADA CON ESTRELLAS */}
         <div className="mt-12 border-t pt-8">
           <h3 className="text-xl font-bold mb-6 uppercase tracking-wide">Opiniones de los usuarios ({comments.length})</h3>
 
-          {/* Caja para escribir y elegir estrellas */}
           <div className="mb-8 bg-gray-50 p-4 rounded-lg border">
             
-            {/* ⭐️ Selector de Estrellas */}
             <div className="flex items-center gap-1 mb-3">
               <span className="text-sm text-gray-500 mr-2">Tu calificación:</span>
               {[1, 2, 3, 4, 5].map((star) => (
@@ -220,7 +204,6 @@ export default function ProductPage({ params }) {
             </div>
           </div>
 
-          {/* Lista de comentarios */}
           <div className="space-y-4">
             {comments.length > 0 ? (
               comments.map((c) => (
@@ -229,7 +212,6 @@ export default function ProductPage({ params }) {
                     <div className="flex items-center gap-2">
                       <span className="font-bold text-gray-800">@{c.user}</span>
                       
-                      {/* ⭐️ Dibujamos las estrellas que guardó este usuario */}
                       <div className="flex text-sm">
                         {[1, 2, 3, 4, 5].map((star) => (
                           <span key={star} className={star <= (c.rating || 5) ? 'text-yellow-400' : 'text-gray-200'}>
