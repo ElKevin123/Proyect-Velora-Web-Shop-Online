@@ -41,7 +41,9 @@ export default function Footer() {
             <li><a href="#" className="hover:text-white transition-colors duration-300">Shipping</a></li>
             <li><a href="#" className="hover:text-white transition-colors duration-300">Returns</a></li>
             <li><a href="#" className="hover:text-white transition-colors duration-300">Care Guide</a></li>
-            <li><a href="#" className="hover:text-white transition-colors duration-300">Contact</a></li>
+            <li><a href="https://wa.me/51956272971?text=Quieres%20recibir%20tda%20la%20lechita%20%F0%9F%8D%BC%F0%9F%92%A6%3F" target="_blank" 
+            rel="noopener noreferrer" 
+            className="hover:underline">Contact</a></li>
           </ul>
         </div>
 
