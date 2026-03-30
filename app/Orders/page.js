@@ -7,7 +7,7 @@ export default function Orders() {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    // 🔥 1. CORRECCIÓN: Usamos la llave correcta de la sesión
+    
     const loggedInUser = JSON.parse(localStorage.getItem("velora_currentUser"));
     const userEmail = loggedInUser ? loggedInUser.email : "invitado@tienda.com";
 
@@ -16,7 +16,7 @@ export default function Orders() {
       try {
         const parsedOrders = JSON.parse(savedOrders);
         if (Array.isArray(parsedOrders)) {
-          // 🔥 2. FILTRO INTELIGENTE: Trae los pedidos de este correo o los que no tengan dueño
+          
           const myOrders = parsedOrders.filter(
             order => order.user === userEmail || !order.user
           );
@@ -27,7 +27,6 @@ export default function Orders() {
     }
     setIsLoaded(true);
 
-    // Apagamos el puntito verde
     window.dispatchEvent(new Event("orderUpdated"));
   }, []);
 
@@ -36,11 +35,10 @@ export default function Orders() {
   }
 
   const address = "Av. Javier Prado Este 123, San Isidro, Lima";
-  // 🔥 3. CORRECCIÓN: Faltaba el signo $ en tu variable de Maps
   const mapsLink = `http://maps.google.com/?q=${encodeURIComponent(address)}`;
 
   return (
-    // ... AQUÍ ABAJO DEJA TODO EL RESTO DE TU CÓDIGO (EL RETURN) EXACTAMENTE IGUAL ...
+    
     <div className="p-6 max-w-4xl mx-auto">
       <h1 className="text-3xl font-bold mb-8 text-gray-800 uppercase tracking-wide">
         Historial de Pedidos 📦
@@ -56,13 +54,12 @@ export default function Orders() {
       ) : (
         <div className="flex flex-col gap-6">
           {orders.map((order, index) => {
-            // Tomamos el primer producto para mostrarlo en la miniatura de la tarjeta
+           
             const firstProduct = order.items?.[0] || {};
             
             return (
               <div key={index} className="flex gap-6 items-center border border-gray-200 rounded-xl p-5 bg-white shadow-sm hover:shadow-md transition">
                 
-                {/* 🖼️ Imagen del producto (Estilo miniatura) */}
                 <div className="w-24 h-24 flex-shrink-0 bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center border shadow-sm p-2">
                   <img 
                     src={firstProduct.image || "https://via.placeholder.com/100"} 
@@ -71,10 +68,8 @@ export default function Orders() {
                   />
                 </div>
 
-                {/* 📝 Información del Pedido */}
                 <div className="flex flex-col w-full text-sm">
                   
-                  {/* Título de la orden y Fecha */}
                   <div className="flex justify-between items-start mb-3 border-b border-gray-100 pb-2">
                     <h2 className="font-bold text-gray-800 tracking-wide text-base">
                       Pedido {order.id}
@@ -82,18 +77,17 @@ export default function Orders() {
                     <span className="text-xs text-gray-400 font-bold">{order.date || "Reciente"}</span>
                   </div>
                   
-                  {/* 🔥 NUEVO: Lista de productos exactos y cantidades */}
                   <div className="flex flex-col gap-2 mb-4">
                     {order.items?.map((item, idx) => (
                       <div key={idx} className="flex justify-between items-center text-sm">
                         <span className="text-gray-600 flex items-center gap-2">
-                          {/* Muestra la cantidad (ej. 2x) */}
+                          
                           <span className="font-bold text-pink-500 bg-pink-50 px-2 py-0.5 rounded-md">
                             {item.quantity || 1}x
                           </span> 
                           <span className="capitalize">{item.name}</span>
                         </span>
-                        {/* Precio unitario multiplicado por cantidad */}
+                        
                         <span className="text-gray-400 font-medium">
                           S/. {(Number(item.price) * Number(item.quantity || 1)).toFixed(2)}
                         </span>
@@ -101,7 +95,6 @@ export default function Orders() {
                     ))}
                   </div>
                   
-                  {/* Dirección con Google Maps */}
                   <a 
                     href={mapsLink} 
                     target="_blank" 
@@ -111,7 +104,6 @@ export default function Orders() {
                     📍 {address}
                   </a>
 
-                  {/* Estado y Total */}
                   <div className="flex justify-between items-end border-t border-gray-100 pt-3 mt-1">
                     <span className="text-xs font-bold text-yellow-700 bg-yellow-100 px-3 py-1 rounded-full uppercase tracking-wider">
                       • Entregado

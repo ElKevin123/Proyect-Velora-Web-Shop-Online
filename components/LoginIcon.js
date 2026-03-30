@@ -48,5 +48,4 @@ const LoginIcon = () => {
   );
 };
 
-// 🔥 Exportamos explícitamente al final
 export default LoginIcon;

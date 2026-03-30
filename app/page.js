@@ -8,7 +8,7 @@ export default function Home() {
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    // Si los productos no tienen un ID, les agregamos uno único al cargarlos
+    
     const data = JSON.parse(localStorage.getItem("products")) || [];
     const dataWithIds = data.map((p, index) => ({
       ...p,
@@ -17,12 +17,10 @@ export default function Home() {
     setProducts(dataWithIds);
   }, []);
 
-  // 🔥 1. AHORA SÍ: filteredProducts está suelto en la función principal
   const filteredProducts = products.filter(product => 
     product.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Modificado para usar uniqueId en lugar del índice, así no se cruzan al buscar
   function toggleSelect(uniqueId) {
     if (selected.includes(uniqueId)) {
       setSelected(selected.filter((id) => id !== uniqueId));
@@ -34,7 +32,6 @@ export default function Home() {
   function addToCart() {
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-    // Buscamos los productos completos basándonos en los IDs seleccionados
     const selectedProducts = products.filter((p) =>
       selected.includes(p.uniqueId)
     );
@@ -43,14 +40,12 @@ export default function Home() {
     localStorage.setItem("cart", JSON.stringify(newCart));
     setSelected([]);
 
-    // Disparamos el evento para que la bolita roja del carrito se actualice
     window.dispatchEvent(new Event("cartUpdated"));
   }
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
 
-      {/* Botón flotante del carrito */}
       {selected.length > 0 && (
         <button
           onClick={addToCart}
@@ -60,10 +55,8 @@ export default function Home() {
         </button>
       )}
 
-      {/* Cabecera con buscador y botón de crear */}
       <div className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
         
-        {/* El buscador visual */}
         <div className="w-full sm:max-w-md">
           <input 
             type="text" 
@@ -81,7 +74,6 @@ export default function Home() {
         </a>
       </div>
 
-      {/* 🔥 2. AQUÍ USAMOS filteredProducts PARA DIBUJAR LA CUADRÍCULA */}
       {filteredProducts.length > 0 ? (
         <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-6">
           {filteredProducts.map((p) => (

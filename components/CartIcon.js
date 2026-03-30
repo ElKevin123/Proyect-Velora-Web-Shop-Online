@@ -11,16 +11,12 @@ export default function CartIcon() {
   }
 
   useEffect(() => {
-    // Revisar al cargar la página por primera vez
     checkCart();
 
-    // 🔥 Escuchar el evento de la MISMA pestaña
     window.addEventListener("cartUpdated", checkCart);
     
-    // 🔥 Escuchar cambios desde OTRAS pestañas (opcional pero buena práctica)
     window.addEventListener("storage", checkCart);
 
-    // Limpiar los event listeners al desmontar
     return () => {
       window.removeEventListener("cartUpdated", checkCart);
       window.removeEventListener("storage", checkCart);

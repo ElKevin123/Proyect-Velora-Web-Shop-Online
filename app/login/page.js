@@ -4,35 +4,31 @@ import { useState } from "react";
 import Loading from "../loading";
 
 export default function LoginPage() {
-  // Estado para saber si estamos en "Login" o "Registro"
+  
   const [isLogin, setIsLogin] = useState(true);
   
-  // Estados para los campos del formulario
+  
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  // 🔥 1. NUEVO ESTADO PARA LA PANTALLA DE CARGA
   const [isLoading, setIsLoading] = useState(false);
 
   function handleSubmit(e) {
     e.preventDefault();
-    setError(""); // Limpiamos errores previos
+    setError(""); 
 
-    // Leemos los usuarios guardados (o creamos una lista vacía si no hay)
     const users = JSON.parse(localStorage.getItem("velora_users")) || [];
 
     if (isLogin) {
-      // 🔥 LÓGICA DE INICIAR SESIÓN
+      
       const userExists = users.find(u => u.email === email && u.password === password);
       if (userExists) {
-        // Guardamos quién inició sesión
+      
         localStorage.setItem("velora_currentUser", JSON.stringify(userExists));
         
-        // 🔥 2. ACTIVAMOS LA PANTALLA DE CARGA
         setIsLoading(true);
         
-        // Esperamos 2 segundos antes de redirigir al inicio
         setTimeout(() => {
           window.location.href = "/"; 
         }, 2000);
@@ -41,23 +37,20 @@ export default function LoginPage() {
         setError("La cuenta no existe o la contraseña es incorrecta.");
       }
     } else {
-      // 🔥 LÓGICA DE REGISTRO
+      
       const emailAlreadyUsed = users.find(u => u.email === email);
       if (emailAlreadyUsed) {
         setError("Este correo ya está registrado. Por favor, inicia sesión.");
       } else {
-        // Creamos el nuevo usuario
+        
         const newUser = { email, password };
         users.push(newUser);
         localStorage.setItem("velora_users", JSON.stringify(users));
         
-        // Lo iniciamos sesión automáticamente
         localStorage.setItem("velora_currentUser", JSON.stringify(newUser));
         
-        // 🔥 3. ACTIVAMOS LA PANTALLA DE CARGA
         setIsLoading(true);
         
-        // Esperamos 2 segundos antes de redirigir al inicio
         setTimeout(() => {
           window.location.href = "/"; 
         }, 2000);
@@ -65,7 +58,6 @@ export default function LoginPage() {
     }
   }
 
-  // 🔥 4. MOSTRAMOS LA PANTALLA DE CARGA (Justo antes de tu return principal)
   if (isLoading) {
     return <Loading />;
   }
@@ -78,7 +70,6 @@ export default function LoginPage() {
           {isLogin ? "Bienvenido a Velora" : "Únete a Velora"}
         </h2>
 
-        {/* Mensaje de Error */}
         {error && (
           <div className="bg-red-50 text-red-500 p-3 rounded mb-4 text-sm text-center font-medium">
             {error}
@@ -118,7 +109,6 @@ export default function LoginPage() {
           </button>
         </form>
 
-        {/* Interruptor para cambiar entre Login y Registro */}
         <div className="mt-8 text-center border-t border-gray-100 pt-6">
           <p className="text-sm text-gray-500">
             {isLogin ? "¿No tienes una cuenta?" : "¿Ya tienes una cuenta?"}
@@ -126,7 +116,7 @@ export default function LoginPage() {
           <button 
             onClick={() => {
               setIsLogin(!isLogin);
-              setError(""); // Limpiar errores al cambiar
+              setError(""); 
             }}
             className="mt-2 text-pink-500 font-bold hover:underline"
           >

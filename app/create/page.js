@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 export default function CreatePage() {
   const router = useRouter();
 
-  // 1. 🔥 Agregamos "material" al estado inicial
   const [form, setForm] = useState({
     name: "",
     price: "",
@@ -18,20 +17,18 @@ export default function CreatePage() {
   function handleSubmit(e) {
     e.preventDefault();
 
-    // 1. 🔥 Buscamos quién tiene la sesión iniciada
     const currentUserString = localStorage.getItem("velora_currentUser");
     let craftsmanName = "Artesano Anónimo";
     let craftsmanEmail = "";
 
     if (currentUserString) {
       const user = JSON.parse(currentUserString);
-      craftsmanName = user.email.split('@')[0]; // Sacamos el nombre antes del @
-      craftsmanEmail = user.email; // Guardamos el correo completo
+      craftsmanName = user.email.split('@')[0]; 
+      craftsmanEmail = user.email; 
     }
 
     const products = JSON.parse(localStorage.getItem("products")) || [];
     
-    // 2. 🔥 Guardamos el producto incluyendo al creador
     const productToSave = { 
       ...form, 
       id: Date.now(),
@@ -94,7 +91,6 @@ export default function CreatePage() {
             }
           />
 
-          {/* 3. 🔥 Le agregamos el onChange al material y el mismo estilo a la caja */}
           <div>
             <label className="block text-sm font-bold text-gray-700 mb-2">Material del Producto:</label>
             <input 

@@ -4,15 +4,13 @@ import { useEffect, useState } from "react";
 import Loading from "../loading";
 
 export default function CartPage() {
-  // 1️⃣ TODOS LOS ESTADOS (HOOKS) JUNTOS HASTA ARRIBA
   const [cart, setCart] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [isCheckingOut, setIsCheckingOut] = useState(false); // Para mostrar la Vista de Simulación
+  const [isCheckingOut, setIsCheckingOut] = useState(false); 
   const [isSuccess, setIsSuccess] = useState(false);
   const [lastOrderTotal, setLastOrderTotal] = useState(0);
-  const [isLoading, setIsLoading] = useState(false); // 🔥 NUEVO: Estado EXCLUSIVO para la pantalla de carga
+  const [isLoading, setIsLoading] = useState(false); 
 
-  // 2️⃣ TODOS LOS EFECTOS
   useEffect(() => {
     const savedCart = localStorage.getItem("cart");
     if (savedCart) {
@@ -38,7 +36,6 @@ export default function CartPage() {
     setIsLoaded(true);
   }, []);
 
-  // 3️⃣ FUNCIONES DEL CARRITO
   function removeFromCart(indexToRemove) {
     const updatedCart = cart.filter((_, i) => i !== indexToRemove);
     setCart(updatedCart);
@@ -54,27 +51,21 @@ export default function CartPage() {
     window.dispatchEvent(new Event("cartUpdated"));
   }
 
-  // Cálculos de precios
   const subtotal = cart.reduce((sum, item) => sum + (Number(item.price || 0) * (item.quantity || 1)), 0);
   const igv = subtotal * 0.18;
   const totalAmount = subtotal + igv;
 
-  // PASO A: Botón "Ir a pagar" (Solo verifica sesión y muestra la simulación)
   function handleCheckout() {
     const loggedInUser = localStorage.getItem("velora_currentUser");
     if (!loggedInUser) {
       window.location.href = "/login"; 
       return; 
     }
-    setIsCheckingOut(true); // Muestra la vista de simulación
+    setIsCheckingOut(true); 
   }
 
-  // PASO B: Botón "Confirmar Pago" (Muestra el loading por 2 seg y luego cobra)
   function handlePayment() {
-    // 🔥 Activamos la pantalla blanca de carga de Velora
     setIsLoading(true);
-
-    // Retraso de 2 segundos simulando conexión con el banco
     setTimeout(() => {
       const itemsComprados = [...cart];
       const loggedInUserString = localStorage.getItem("velora_currentUser");
@@ -108,26 +99,22 @@ export default function CartPage() {
 
       setLastOrderTotal(totalAmount);
       
-      // Apagamos la carga, cerramos la simulación y mostramos el éxito
       setIsLoading(false);
       setIsCheckingOut(false);
       setIsSuccess(true);
-    }, 2000); // 2 segundos
+    }, 2000); 
   }
 
   function handlePrint() {
     window.print();
   }
 
-  // 4️⃣ LOS RETURNS CONDICIONALES (SIEMPRE VAN DEBAJO DE LOS HOOKS)
   if (!isLoaded) return <div className="p-10 text-center font-bold text-gray-500">Cargando tu carrito...</div>;
 
-  // 🔥 Muestra la pantalla de Velora por 2 segundos
   if (isLoading) {
     return <Loading />;
   }
 
-  // VISTA 3: PANTALLA DE ÉXITO (Recibo)
   if (isSuccess) {
     return (
       <div className="p-6 max-w-md mx-auto mt-10">
@@ -150,12 +137,10 @@ export default function CartPage() {
     );
   }
 
-  // 5️⃣ VISTA 1 y 2: HTML PRINCIPAL DEL CARRITO
   return (
     <div className="p-6 max-w-4xl mx-auto">
       {!isCheckingOut ? (
         <>
-          {/* ... VISTA 1: LISTA DEL CARRITO ... */}
           <h1 className="text-2xl font-bold mb-6 text-gray-800 uppercase tracking-wide">Mi Carrito ({cart.length})</h1>
           {cart.length === 0 ? (
             <div className="text-center py-10 bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl">
@@ -198,7 +183,6 @@ export default function CartPage() {
           )}
         </>
       ) : (
-        /* VISTA 2: SIMULACIÓN DE PAGO */
         <div className="max-w-xl mx-auto bg-white p-8 border rounded-xl shadow-lg mt-10 font-sans">
           <h2 className="text-2xl font-bold text-center mb-6 uppercase border-b pb-4 tracking-wide">Simulación de Pago</h2>
           

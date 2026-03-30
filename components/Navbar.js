@@ -5,23 +5,19 @@ import { useEffect, useState } from "react";
 export default function Navbar() {
   const [currentUser, setCurrentUser] = useState(null);
   const [hasItemsInCart, setHasItemsInCart] = useState(false);
-  const [hasNewOrder, setHasNewOrder] = useState(false); // 🔥 Nuevo estado para pedidos
+  const [hasNewOrder, setHasNewOrder] = useState(false); 
 
   useEffect(() => {
-    // 1. Verificamos usuario
     const userString = localStorage.getItem("velora_currentUser");
     if (userString) setCurrentUser(JSON.parse(userString));
 
-    // 2. Función inteligente para revisar si hay cosas en el carrito
     const checkCart = () => {
       const cart = JSON.parse(localStorage.getItem("cart") || "[]");
       setHasItemsInCart(cart.length > 0);
     };
 
-    // Revisamos al cargar la página
     checkCart();
 
-    // Escuchamos los eventos de compra y carrito
     window.addEventListener("cartUpdated", checkCart);
     window.addEventListener("orderUpdated", () => setHasNewOrder(true));
     
@@ -52,7 +48,6 @@ export default function Navbar() {
             <span className="absolute left-0 -bottom-2 w-0 h-[1.5px] bg-black transition-all group-hover:w-full"></span>
           </a>
           
-          {/* 🔥 Enlace de Pedidos con su puntito verde */}
           <a href="/Orders" onClick={() => setHasNewOrder(false)} className="text-sm font-medium text-gray-500 hover:text-black transition relative group flex items-center">
             Mis Pedidos
             {hasNewOrder && <span className="ml-1 w-2 h-2 bg-green-500 rounded-full"></span>}
@@ -62,7 +57,6 @@ export default function Navbar() {
 
         <div className="flex-1 flex justify-end items-center gap-6">
           
-          {/* 🔥 Icono de Carrito con su puntito verde */}
           <a href="/Cart" className="text-black hover:text-gray-600 transition relative">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
